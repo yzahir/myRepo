@@ -166,7 +166,7 @@ def main(args=None):
     # Initialize MazeExecutor with IMU-based turning
     executor = MazeExecutor(use_filtered_rpy=True)  # or False for raw IMU
     expected_yaw = executor.orientation_to_yaw(response.maze.start_orientation)
-    executor.turn_to_yaw_pid(expected_yaw)  # align_orientation
+    executor.align_orientation(expected_yaw)  # align_orientation
     executor.execute_commands(commands)
     client.destroy_node()
     executor.destroy_node()    
