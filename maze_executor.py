@@ -86,7 +86,7 @@ class MazeExecutor(Node):
                 rclpy.spin_once(self)
 
         yaw_diff = (target_yaw - self.current_yaw + math.pi) % (2 * math.pi) - math.pi
-        self.turn_to_yaw_pid(yaw_diff) #turn_angle
+        self.turn_angle(yaw_diff) #turn_angle
 
     def turn_to_yaw_pid(self, target_yaw, timeout=4.0, kp=2.0, ki=0.0, kd=0.1):
         prev_error = 0
@@ -147,7 +147,7 @@ class MazeExecutor(Node):
 
         if abs(yaw_diff) > tolerance_rad:
             self.get_logger().warn(f"Drift detected. Correcting by {yaw_diff:.2f} rad")
-            self.turn_to_yaw_pid(yaw_diff)
+            self.turn_angle(yaw_diff)
 
     def execute_commands(self, command_list):
         for cmd in command_list:
@@ -155,7 +155,7 @@ class MazeExecutor(Node):
                 self.correct_heading_before_move()
                 self.move_forward()
             elif cmd == 'turn_left':
-                self.turn_to_yaw_pid(math.pi / 2)
+                self.turn_angle(math.pi / 2)
             elif cmd == 'turn_right':
-                self.turn_to_yaw_pid(-math.pi / 2)
+                self.turn_angle(-math.pi / 2)
         self.get_logger().info("Execution complete.")
