@@ -148,14 +148,23 @@ class MazeExecutor(Node):
         if abs(yaw_diff) > tolerance_rad:
             self.get_logger().warn(f"Drift detected. Correcting by {yaw_diff:.2f} rad")
             self.turn_angle(yaw_diff)
-
+            
     def execute_commands(self, command_list):
-        for cmd in command_list:
-            if cmd == 'forward':
-                self.correct_heading_before_move()
-                self.move_forward()
-            elif cmd == 'turn_left':
-                self.turn_angle(math.pi / 2)
-            elif cmd == 'turn_right':
-                self.turn_angle(-math.pi / 2)
-        self.get_logger().info("Execution complete.")
+        try:
+            for cmd in command_list:
+                if cmd == 'forward':
+                    self.correct_heading_before_move()
+                    self.move_forward()
+                elif cmd == 'turn_left':
+                    self.turn_angle(math.pi / 2)
+                elif cmd == 'turn_right':
+                    self.turn_angle(-math.pi / 2)
+            self.get_logger().info("Execution complete.")
+        except KeyboardInterrupt:
+            pass
+        finally:
+            msg = Twist()
+            msg.linear.x = 0.0
+            msg.angular.z = 0.0
+            self.cmd_pub.publish(msg)
+
